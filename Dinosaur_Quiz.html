@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Dinosaur Are You? Personality Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .question {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+        }
+        .option {
+            margin: 5px 0;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>What Dinosaur Are You? Personality Quiz</h1>
+    <div id="quiz"></div>
+    <button onclick="calculateResult()">Get Your Dinosaur!</button>
+    <div id="result"></div>
+
+    <script>
+        const questions = [
+            {
+              // Q1
+                question: "You're at a food festival. Which dish are you most likely to try?",
+                options: [
+                    "The weirdest thing on the menu – fried tarantulas, anyone?",
+                    "Something unusual but not too wild, like blue cheese ice cream",
+                    "A familiar dish with an interesting twist",
+                    "A new take on your favorite comfort food",
+                    "The most normal thing you can find – where's the hot dog stand?"
+                ]
+            },
+            {
+              // Q2
+                question: "If you could have a conversation with any fictional character, you'd choose:",
+                options: [
+                    "An alien with a completely different way of thinking",
+                    "A time traveler with stories from various eras",
+                    "A talking animal with a unique perspective on the world",
+                    "A character from your favorite book or movie",
+                    "No thanks, I'd rather chat with real people"
+                ]
+            },
+            {
+              // Q3
+                question: "Your friend suggests trying a new hobby. You're most excited about:",
+                options: [
+                    "Extreme ironing (yes, it's a real thing!)",
+                    "Learning to play a quirky instrument like the theremin",
+                    "Taking up a creative pursuit like painting or writing",
+                    "Joining a local sports team or book club",
+                    "Politely declining and sticking to your current hobbies"
+                ]
+            },
+            {
+              // Q4
+                question: "It's movie night! You're most likely to pick:",
+                options: [
+                    "An avant-garde film that challenges conventional storytelling",
+                    "A thought-provoking documentary on an unfamiliar topic",
+                    "A critically acclaimed drama or indie film",
+                    "A classic movie in your favorite genre",
+                    "The same movie you've already watched 100 times"
+                ]
+            },
+            {
+              // Q5
+                question: "You've won a free class. Which one do you choose?",
+                options: [
+                    "Underwater basket weaving (because why not?)",
+                    "Introduction to quantum physics for beginners",
+                    "A creative writing workshop",
+                    "Cooking lessons for your favorite cuisine",
+                    "A class that directly relates to your job or main hobby"
+                ]
+            },
+            {
+              // Q6
+                question: "Your room is a metaphor for your life. It looks like:",
+                options: [
+                    "A meticulously organized space where even your socks are color-coded",
+                    "Generally tidy with a few 'organized chaos' areas",
+                    "Lived-in but you can find most things... eventually",
+                    "A 'floordrobe' is a valid storage solution, right?",
+                    "A tornado just passed through... last year"
+                ]
+            },
+            {
+              // Q7
+                question: "You're planning a road trip. Your approach is:",
+                options: [
+                    "Creating a minute-by-minute itinerary with multiple backup plans",
+                    "Having a general route and some must-see stops planned",
+                    "Knowing your destination but figuring out the details as you go",
+                    "Throwing some stuff in the car and seeing where the road takes you",
+                    "What road trip? You forgot you were supposed to leave today!"
+                ]
+            },
+            {
+              // Q8
+                question: "It's tax season. You:",
+                options: [
+                    "Already filed in January and are planning for next year",
+                    "Set aside a day to get it done well before the deadline",
+                    "Plan to do it this weekend... or maybe next",
+                    "Wait until the last minute and pull an all-nighter",
+                    "What's a tax return? Is that important?"
+                ]
+            },
+            {
+              // Q9
+                question: "Your to-do list is:",
+                options: [
+                    "A work of art with color-coding, priority levels, and sub-tasks",
+                    "A useful tool you update and check regularly",
+                    "Scribbled on various post-its around your space",
+                    "In your head (and often forgotten)",
+                    "To-do list? More like a to-don't list!"
+                ]
+            },
+            {
+              // Q10
+                question: "You're assembling furniture. Your strategy is:",
+                options: [
+                    "Reading the instructions thoroughly before touching anything",
+                    "Following the steps carefully, with occasional glances at the picture",
+                    "Skimming the instructions and figuring it out as you go",
+                    "Diving in and only checking the manual if you get stuck",
+                    "Hoping it will magically assemble itself while you nap"
+                ]
+            },
+            {
+              // Q11
+                question: "At a party, you're most likely to be found:",
+                options: [
+                    "Leading a conga line and chatting with everyone",
+                    "Enjoying conversations with various groups",
+                    "Hanging out with a few friends in a quieter corner",
+                    "Petting the host's dog or cat",
+                    "Wondering how soon you can politely leave"
+                ]
+            },
+            {
+              // 12
+                question: "Your ideal weekend is:",
+                options: [
+                    "Attending a festival, then hitting the clubs with friends",
+                    "A mix of social activities and some downtime",
+                    "Meeting a friend for coffee and then relaxing at home",
+                    "Curling up with a good book or binge-watching a show",
+                    "Turning off your phone and embracing your inner hermit"
+                ]
+            },
+            {
+              // Q13
+                question: "You've just achieved something great. You:",
+                options: [
+                    "Throw a huge party to celebrate with everyone you know",
+                    "Share the news with friends and family over dinner",
+                    "Tell a few close friends about it",
+                    "Treat yourself to something nice in private",
+                    "Keep it to yourself, feeling satisfied inside"
+                ]
+            },
+            {
+              // Q14
+                question: "In a group project, you prefer to:",
+                options: [
+                    "Be the team leader, coordinating everyone's efforts",
+                    "Contribute ideas and enjoy the collaborative process",
+                    "Do your assigned part and participate in discussions when needed",
+                    "Work independently on your section",
+                    "Wonder if you can do the whole thing by yourself instead"
+                ]
+            },
+            {
+              // Q15
+                question: "Your phone's battery dies while you're out. You feel:",
+                options: [
+                    "Panicked – how will you connect with people now?",
+                    "Inconvenienced but you'll manage",
+                    "A mix of relief and mild concern",
+                    "Secretly pleased for the interruption-free time",
+                    "You didn't even notice because it's always on airplane mode anyway"
+                ]
+            },
+            {
+              // Q16
+                question: "Your friend is wearing a questionable outfit and asks your opinion. You say:",
+                options: [
+                    "'You look amazing!' (Even if it's not true)",
+                    "'I like the color, but maybe try it with different shoes?'",
+                    "'It's not my style, but if you like it, go for it'",
+                    "'That outfit doesn't suit you at all'",
+                    "'Did you get dressed in the dark?'"
+                ]
+            },
+            {
+              // Q17
+                question: "You see someone struggling with heavy bags. You:",
+                options: [
+                    "Immediately offer to help and insist on carrying them to their destination",
+                    "Ask if they need assistance",
+                    "Feel conflicted about whether to offer help",
+                    "Assume they can handle it themselves",
+                    "Quickly walk the other way to avoid the situation"
+                ]
+            },
+            {
+              // Q18
+                question: "In a heated debate, you tend to:",
+                options: [
+                    "Listen to all sides and try to find common ground",
+                    "Express your opinion while respecting others' views",
+                    "Argue your point passionately",
+                    "Dismiss opposing viewpoints as ridiculous",
+                    "Start a completely unrelated argument just for fun"
+                ]
+            },
+            {
+              // Q19
+                question: "Your neighbor is playing loud music late at night. You:",
+                options: [
+                    "Assume they don't realize how loud it is and politely ask them to turn it down",
+                    "Leave an anonymous note asking them to be more considerate",
+                    "Tolerate it for a while, then eventually complain if it continues",
+                    "Angrily confront them about their lack of consideration",
+                    "Plot elaborate revenge involving bagpipes and a 6 AM wake-up call"
+                ]
+            },
+            {
+              // Q20
+                question: "You find a wallet on the street. You:",
+                options: [
+                    "Go out of your way to track down the owner and return it intact",
+                    "Turn it in to the police or nearest lost-and-found",
+                    "Take it home and consider your options",
+                    "Keep the cash but turn in the cards",
+                    "Finder's keepers!"
+                ]
+            },
+            {
+              // Q21
+                question: "You're about to board a plane. Your dominant thought is:",
+                options: [
+                    "Excitement for the upcoming adventure",
+                    "Hoping you remembered to pack everything",
+                    "A mix of nervousness and anticipation",
+                    "Worry about all the things that could go wrong",
+                    "Sheer panic – maybe you should have taken the train"
+                ]
+            },
+            {
+              // Q22
+                question: "You make a small mistake at work. Your reaction:",
+                options: [
+                    "Shrug it off – everyone makes mistakes",
+                    "Feel a bit embarrassed but quickly move on",
+                    "Apologize profusely and promise to fix it",
+                    "Worry about it for the rest of the day",
+                    "Convince yourself you're going to get fired over this"
+                ]
+            },
+            {
+              // Q23
+                question: "It's first date time! You're feeling:",
+                options: [
+                    "Excited and confident – you've got this!",
+                    "A few butterflies, but mostly looking forward to it",
+                    "Equal parts nervous and excited",
+                    "So anxious you consider canceling",
+                    "Absolutely terrified – maybe you'll just be single forever"
+                ]
+            },
+            {
+              // Q24
+                question: "You check your bank account and it's lower than expected. You:",
+                options: [
+                    "Calmly review your expenses to understand why",
+                    "Feel a bit concerned but know you can adjust your budget",
+                    "Worry about it on and off for the next few days",
+                    "Panic and imagine yourself living in a cardboard box",
+                    "Spiral into an existential crisis about your entire financial future"
+                ]
+            },
+            {
+              // Q25
+                question: "Your friend hasn't texted back in a few hours. You think:",
+                options: [
+                    "They're probably busy, no big deal",
+                    "You'll check in with them later if you don't hear back",
+                    "Did you say something wrong in your last message?",
+                    "They must be mad at you for some reason",
+                    "Clearly, they hate you and your entire friendship was a lie"
+                ]
+            }
+        ];
+
+        const dinosaurs = [
+            {name: "Stegosauridae", traits: [2,3,2,3,4]},
+            {name: "Ankylosauria", traits: [1,4,1,2,3]},
+            {name: "Hadrosauridae", traits: [3,3,4,4,2]},
+            {name: "Pachycephalosauria", traits: [2,3,3,2,4]},
+            {name: "Ceratopsia", traits: [3,4,3,2,3]},
+            {name: "Heterodontosauridae", traits: [4,3,3,3,2]},
+            {name: "Dromaeosauridae", traits: [5,4,4,1,3]},
+            {name: "Titanosauria", traits: [2,2,3,4,1]},
+            {name: "Plateosauridae", traits: [3,3,2,3,2]},
+            {name: "Abelisauridae", traits: [3,3,4,1,4]},
+            {name: "Tyrannosauridae", traits: [4,3,5,1,3]},
+            {name: "Spinosauridae", traits: [4,3,3,2,3]},
+            {name: "Allosauridae", traits: [4,3,4,2,3]},
+            {name: "Carcharodontosauridae", traits: [3,3,4,1,3]},
+            {name: "Diplodocidae", traits: [2,2,3,4,1]}
+        ];
+
+        function renderQuiz() {
+            const quizContainer = document.getElementById('quiz');
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <p>${index + 1}. ${q.question}</p>
+                    <div class="options">
+                        ${q.options.map((option, i) => `
+                            <label class="option">
+                                <input type="radio" name="q${index}" value="${i}">
+                                ${option}
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function calculateResult() {
+            const userTraits = [0, 0, 0, 0, 0];
+            questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selected) {
+                    const value = 5 - parseInt(selected.value);
+                    userTraits[Math.floor(index / 5)] += value;
+                }
+            });
+
+            userTraits.forEach((trait, index) => {
+                userTraits[index] = Math.round(trait / 5);
+            });
+
+            let closestDinosaur = dinosaurs[0];
+            let smallestDifference = Infinity;
+
+            dinosaurs.forEach(dino => {
+                const difference = dino.traits.reduce((sum, trait, index) =>
+                    sum + Math.abs(trait - userTraits[index]), 0);
+                if (difference < smallestDifference) {
+                    smallestDifference = difference;
+                    closestDinosaur = dino;
+                }
+            });
+
+            document.getElementById('result').innerText = `You are most like a ${closestDinosaur.name}!`;
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>
